@@ -6,8 +6,8 @@ from persofy.model.transaction_model import TransactionModel
 
 class TransactionRepository:
 
-    def __init__(self, caminho_arquivo):
-        self._file_path = caminho_arquivo
+    def __init__(self, file_path: str):
+        self._file_path = file_path
 
     def get_transactions(self) -> List[TransactionModel]:
         with open(self._file_path, 'r') as file:
