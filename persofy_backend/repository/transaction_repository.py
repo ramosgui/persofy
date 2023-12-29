@@ -1,7 +1,7 @@
 import json
 from typing import List
 
-from persofy.model.transaction_model import TransactionModel
+from model.transaction_model import TransactionModel
 
 
 class TransactionRepository:
@@ -9,7 +9,7 @@ class TransactionRepository:
     def __init__(self, file_path: str):
         self._file_path = file_path
 
-    def _open_file(self) -> List[dict]:
+    def _get_transactions_from_json(self) -> List[dict]:
         with open(self._file_path, 'r') as file:
             transaction_data = json.load(file)
         return transaction_data
@@ -19,10 +19,10 @@ class TransactionRepository:
             json.dump(transactions_data, file, indent=4)
 
     def get_transactions(self) -> List[TransactionModel]:
-        return [TransactionModel(**data) for data in self._open_file()]
+        return [TransactionModel(**data) for data in self._get_transactions_from_json()]
 
     def add_transaction(self, new_transaction: TransactionModel):
-        transactions = self._open_file()
+        transactions = self._get_transactions_from_json()
 
         transactions.append({
             'date': new_transaction.date,

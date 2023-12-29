@@ -60,9 +60,15 @@
         "category": "Educa\u00e7\u00e3o"
     },
     {
-        "data": "2023-12-29",
-        "descricao": "Teste",
-        "valor": 1321.0,
-        "categoria": "Categ"
+        "date": "2023-12-29",
+        "description": "Teste",
+        "amount": 1321.0,
+        "category": "Categ"
+    },
+    {
+        "date": "2023-12-29",
+        "description": "Teste",
+        "amount": 50.0,
+        "category": "Categ"
     }
 ]
