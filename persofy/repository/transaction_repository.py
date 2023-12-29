@@ -9,17 +9,20 @@ class TransactionRepository:
     def __init__(self, file_path: str):
         self._file_path = file_path
 
-    def get_transactions(self) -> List[TransactionModel]:
+    def _open_file(self) -> List[dict]:
         with open(self._file_path, 'r') as file:
-            transacoes_data = json.load(file)
-            return [TransactionModel(**data) for data in transacoes_data]
+            transaction_data = json.load(file)
+        return transaction_data
+
+    def _save_file(self, transactions_data: List[dict]):
+        with open(self._file_path, 'w') as file:
+            json.dump(transactions_data, file, indent=4)
+
+    def get_transactions(self) -> List[TransactionModel]:
+        return [TransactionModel(**data) for data in self._open_file()]
 
     def add_transaction(self, new_transaction: TransactionModel):
-        try:
-            with open(self._file_path, 'r') as file:
-                transactions = json.load(file)
-        except FileNotFoundError:
-            transactions = []
+        transactions = self._open_file()
 
         transactions.append({
             'date': new_transaction.date,
@@ -28,5 +31,4 @@ class TransactionRepository:
             'category': new_transaction.category
         })
 
-        with open(self._file_path, 'w') as file:
-            json.dump(transactions, file, indent=4)
+        self._save_file(transactions)
