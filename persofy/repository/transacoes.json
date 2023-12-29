@@ -1,0 +1,68 @@
+[
+    {
+        "date": "2023-11-09",
+        "description": "Consulta m\u00e9dica",
+        "amount": 47.53,
+        "category": "Lazer"
+    },
+    {
+        "date": "2023-04-17",
+        "description": "Livros",
+        "amount": 86.69,
+        "category": "Sa\u00fade"
+    },
+    {
+        "date": "2023-08-16",
+        "description": "Compra no supermercado",
+        "amount": 472.76,
+        "category": "Transporte"
+    },
+    {
+        "date": "2023-11-03",
+        "description": "Passagem de \u00f4nibus",
+        "amount": 186.21,
+        "category": "Alimenta\u00e7\u00e3o"
+    },
+    {
+        "date": "2023-07-13",
+        "description": "Passagem de \u00f4nibus",
+        "amount": 265.82,
+        "category": "Educa\u00e7\u00e3o"
+    },
+    {
+        "date": "2023-06-09",
+        "description": "Consulta m\u00e9dica",
+        "amount": 322.04,
+        "category": "Educa\u00e7\u00e3o"
+    },
+    {
+        "date": "2023-08-08",
+        "description": "Passagem de \u00f4nibus",
+        "amount": 178.37,
+        "category": "Lazer"
+    },
+    {
+        "date": "2023-05-08",
+        "description": "Livros",
+        "amount": 392.12,
+        "category": "Alimenta\u00e7\u00e3o"
+    },
+    {
+        "date": "2023-05-08",
+        "description": "Consulta m\u00e9dica",
+        "amount": 400.08,
+        "category": "Alimenta\u00e7\u00e3o"
+    },
+    {
+        "date": "2023-03-30",
+        "description": "Cinema",
+        "amount": 240.0,
+        "category": "Educa\u00e7\u00e3o"
+    },
+    {
+        "data": "2023-12-29",
+        "descricao": "Teste",
+        "valor": 1321.0,
+        "categoria": "Categ"
+    }
+]
