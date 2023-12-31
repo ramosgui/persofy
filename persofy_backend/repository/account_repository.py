@@ -1,47 +1,41 @@
 import json
 from typing import List
 
+from model.account_model import AccountModel
 from model.transaction_model import TransactionModel
+from repository.transaction_repository import TransactionRepository
 
 
-class TransactionRepository:
+class AccountRepository:
 
-    def __init__(self, file_path: str):
+    def __init__(self, file_path: str, trx_repo: TransactionRepository):
         self._file_path = file_path
-        self._cached_transactions = self._get_transactions_from_json()
+        self._cached_data = self._get_data_from_json()
+        self._transaction_repository = trx_repo
 
-    def _get_transactions_from_json(self) -> List[dict]:
+    def _get_data_from_json(self) -> List[dict]:
         with open(self._file_path, 'r') as file:
-            transaction_data = json.load(file)
-        return transaction_data
+            data = json.load(file)
+        return data
 
-    def _save_file(self, transactions_data: List[dict]):
+    def _save_file(self, data: List[dict]):
         with open(self._file_path, 'w') as file:
-            json.dump(transactions_data, file, indent=4)
+            json.dump(data, file, indent=4)
 
-    def get_transactions(self) -> List[TransactionModel]:
-        transaction_models = []
-        for data in self._get_transactions_from_json():
-            model = TransactionModel(date=data['date'], description=data['description'], amount=data['amount'],
-                                     category=data['category'], parcela=data.get('parcela'), parcela_total=data.get('parcela_total'),
-                                     ref=data.get('ref'), _id=data.get('id'))
-            transaction_models.append(model)
-        return transaction_models
+    def get_account(self) -> AccountModel:
+        pass
 
-    def delete_transaction(self, _id: str):
-        transactions = self.get_transactions()
-        for transaction in transactions:
-            if transaction.id == _id:
-                self._cached_transactions.remove(transaction.as_dict())
-                self._save_file(self._cached_transactions)
+    def get_accounts(self) -> List[AccountModel]:
+        account_models = []
+        for data in self._get_data_from_json():
+            transactions = self._transaction_repository.get_transactions_by_account(data['description'])
+            model = AccountModel(_id=data['id'], description=data['description'], saldo_inicial=data['saldo_inicial'],
+                                 transactions=transactions)
+            account_models.append(model)
+        return account_models
 
-    def create_transaction(self, new_transaction: TransactionModel):
-        trx = new_transaction.as_dict()
-        self._cached_transactions.append(trx)
-        self._save_file(self._cached_transactions)
-        return trx
-
-    def create_transactions(self, new_transactions: List[TransactionModel]):
-        for transaction in new_transactions:
-            self._cached_transactions.append(transaction.as_dict())
-        self._save_file(self._cached_transactions)
+    def create(self, account: AccountModel) -> dict:
+        acc = account.as_dict()
+        self._cached_data.append(acc)
+        self._save_file(self._cached_data)
+        return acc

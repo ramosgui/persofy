@@ -28,6 +28,8 @@ export default function TransactionTableComponent(props) {
 
     const [transactions, setTransactions] = TransactionTableData();
 
+    const {accounts} = props;
+
     // useEffect(() => {
 
     // }, [props])
@@ -47,7 +49,7 @@ export default function TransactionTableComponent(props) {
 
     return (
         <>
-        <NewTransactionButtonComponent transactions={transactions} setTransactions={setTransactions}/>
+        <NewTransactionButtonComponent transactions={transactions} setTransactions={setTransactions} accounts={accounts}/>
         <div id="transactionTable">
             <TableContainer component={Paper}>
                 <Table size="small" aria-label="a dense table">
@@ -56,10 +58,12 @@ export default function TransactionTableComponent(props) {
                             <TableCell>#</TableCell>
                             <TableCell>Id</TableCell>
                             <TableCell>Ref</TableCell>
+                            <TableCell>Tipo</TableCell>
                             <TableCell>Data</TableCell>
                             <TableCell>Descrição</TableCell>
                             <TableCell>Valor</TableCell>
                             <TableCell>Categoria</TableCell>
+                            <TableCell>Conta</TableCell>
                             <TableCell></TableCell>
                         </TableRow>
                     </TableHead>
@@ -72,10 +76,12 @@ export default function TransactionTableComponent(props) {
                                 <TableCell>{index+1}</TableCell>
                                 <TableCell>{transacao.id}</TableCell>
                                 <TableCell>{transacao.ref}</TableCell>
+                                <TableCell>{transacao.type}</TableCell>
                                 <TableCell>{transacao.date}</TableCell>
                                 <TableCell>{formatarDescricao(transacao)}</TableCell>
                                 <TableCell>{formatarValorParaReal(transacao.amount)}</TableCell>
                                 <TableCell>{transacao.category}</TableCell>
+                                <TableCell>{transacao.account_description}</TableCell>
                                 <TableCell>
                                     <IconButton onClick={() => handleDelete(transacao.id)}>
                                         <DeleteIcon />

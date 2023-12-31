@@ -1,24 +1,19 @@
+from typing import List
 
-class TransactionModel:
+from model.transaction_model import TransactionModel
 
-    def __init__(self, _id: str, date, description, amount, category, parcela: int = None, parcela_total: int = None,
-                 ref: str = None):
+
+class AccountModel:
+
+    def __init__(self, _id: str, description: str, saldo_inicial: float, transactions: List[TransactionModel] = None):
         self._id = _id
-        self._date = date
         self._description = description
-        self._amount = amount
-        self._category = category
-        self._parcela = parcela
-        self._parcela_total = parcela_total
-        self._ref = ref
+        self._saldo_inicial = saldo_inicial
+        self._transactions = transactions
 
     @property
     def id(self):
         return self._id
-
-    @property
-    def date(self):
-        return self._date
 
     @property
     def description(self) -> str:
@@ -27,36 +22,44 @@ class TransactionModel:
         return self._description
 
     @property
-    def amount(self) -> float:
-        try:
-            return float(self._amount)
-        except ValueError:
-            raise ValueError("Valor deve ser um número.")
+    def saldo_inicial(self) -> float:
+        return self._saldo_inicial
 
     @property
-    def category(self) -> str:
-        return self._category
+    def transactions(self) -> List[TransactionModel]:
+        return self._transactions
 
     @property
-    def parcela(self) -> int:
-        return self._parcela
+    def total_do_valor_de_saida(self) -> float:
+        amount = 0
+        for trx in self._transactions:
+            if trx.type == 'OUT':
+                amount += trx.amount
+        return amount
 
     @property
-    def parcela_total(self) -> int:
-        return self._parcela_total
+    def total_do_valor_de_entrada(self) -> float:
+        amount = 0
+        for trx in self._transactions:
+            if trx.type == 'IN':
+                amount += trx.amount
+        return amount
 
     @property
-    def ref(self) -> str:
-        return self._ref
+    def total_balanco(self):
+        return self.saldo_inicial + self.total_do_valor_de_entrada + self.total_do_valor_de_saida
 
     def as_dict(self) -> dict:
-        return {
+        _dict = {
             'id': self.id,
-            'date': self.date,
             'description': self.description,
-            'amount': self.amount,
-            'category': self.category,
-            'parcela': self.parcela,
-            'parcela_total': self.parcela_total,
-            'ref': self.ref
+            'saldo_inicial': self.saldo_inicial,
+            'total_do_valor_de_saida': self.total_do_valor_de_saida,
+            'total_do_valor_de_entrada': self.total_do_valor_de_entrada,
+            'total_balanco': self.total_balanco
         }
+
+        if self._transactions:
+            _dict['transactions'] = [trx.as_dict() for trx in self._transactions]
+
+        return _dict

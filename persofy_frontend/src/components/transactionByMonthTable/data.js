@@ -4,13 +4,13 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 
 
-function TransactionTableData() {
-    const [transactions, setTransactions] = useState([]);
+export default function TransactionByMonthTableData() {
+    const [monthInfo, setMonthInfo] = useState([]);
 
     useEffect(() => {
-        axios.get('http://127.0.0.1:5000/transactions')
+        axios.get('http://127.0.0.1:5000/transactions_by_month')
             .then(response => {
-                setTransactions(response.data);
+                setMonthInfo(response.data);
                 console.log(response.data);
                 // setCopyList(response.data);
             })
@@ -19,7 +19,6 @@ function TransactionTableData() {
             });
     }, []);
 
-    return [transactions, setTransactions];
+    return [monthInfo, setMonthInfo];
 }
 
-export default TransactionTableData;

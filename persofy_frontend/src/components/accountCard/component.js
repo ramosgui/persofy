@@ -15,94 +15,48 @@ import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 
-// const formatarValorParaReal = (valor) => {
-//     return Number(valor).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-// };
-
-// const formatarDescricao = (transaction) => {
-//     if (transaction.parcela_total) {
-//         return "(" + transaction.parcela + "/" + transaction.parcela_total + ") " + transaction.description
-//     }
-//     return transaction.description
-// }
-
-const bull = (
-    <Box
-        component="span"
-        sx={{ display: 'inline-block', mx: '2px', transform: 'scale(0.8)' }}
-    >
-        •
-    </Box>
-);
+const formatarValorParaReal = (valor) => {
+    return Number(valor).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+};
 
 
-export default function AccountCardComponent() {
+export default function AccountCardComponent(props) {
 
-    const [accounts, setAccounts] = AccountCardData();
-
-    // return (
-    //     <div id="transactionTable">
-    //         <TableContainer component={Paper}>
-    //             <Table size="small" aria-label="a dense table">
-    //                 <TableHead>
-    //                     <TableRow>
-    //                         <TableCell>#</TableCell>
-    //                         <TableCell>Id</TableCell>
-    //                         <TableCell>Ref</TableCell>
-    //                         <TableCell>Data</TableCell>
-    //                         <TableCell>Descrição</TableCell>
-    //                         <TableCell>Valor</TableCell>
-    //                         <TableCell>Categoria</TableCell>
-    //                         <TableCell></TableCell>
-    //                     </TableRow>
-    //                 </TableHead>
-    //                 <TableBody>
-    //                     {transactions.map((transacao, index) => (
-    //                         <TableRow
-    //                             key={index}
-    //                             sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-    //                         >
-    //                             <TableCell>{index + 1}</TableCell>
-    //                             <TableCell>{transacao.id}</TableCell>
-    //                             <TableCell>{transacao.ref}</TableCell>
-    //                             <TableCell>{transacao.date}</TableCell>
-    //                             <TableCell>{formatarDescricao(transacao)}</TableCell>
-    //                             <TableCell>{formatarValorParaReal(transacao.amount)}</TableCell>
-    //                             <TableCell>{transacao.category}</TableCell>
-    //                             <TableCell>
-    //                                 <IconButton onClick={() => handleDelete(transacao.id)}>
-    //                                     <DeleteIcon />
-    //                                 </IconButton>
-    //                             </TableCell>
-    //                         </TableRow>
-    //                     ))}
-    //                 </TableBody>
-    //             </Table>
-    //         </TableContainer>
-    //     </div>
-    // )
+    const {accounts} = props;
 
     return (
         <Card sx={{ minWidth: 275 }}>
             <CardContent>
-                <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                {/* <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
                     Word of the Day
-                </Typography>
+                </Typography> */}
                 <Typography variant="h5" component="div">
-                    be{bull}nev{bull}o{bull}lent
+                    Accounts 
                 </Typography>
-                <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                
+                {/* <Typography sx={{ mb: 1.5 }} color="text.secondary">
                     adjective
-                </Typography>
-                <Typography variant="body2">
-                    well meaning and kindly.
-                    <br />
-                    {'"a benevolent smile"'}
-                </Typography>
+                </Typography> */}
+                {accounts.map((acc, index) => (
+                    <>
+                    <Typography variant="h6" component="div">
+                        {acc.description} 
+                    </Typography>
+                    <Typography variant="body2">
+                        Saldo Inicial: {formatarValorParaReal(acc.saldo_inicial)} 
+                    </Typography>
+                    <Typography variant="body2">
+                        Saída Total: {formatarValorParaReal(acc.total_do_valor_de_saida)}
+                    </Typography>
+                    <Typography variant="body2">
+                        Balanco: {formatarValorParaReal(acc.total_balanco)}
+                    </Typography>
+                    </>
+                ))}
             </CardContent>
-            <CardActions>
+            {/* <CardActions>
                 <Button size="small">Learn More</Button>
-            </CardActions>
+            </CardActions> */}
         </Card>
     );
 }

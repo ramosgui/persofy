@@ -5,14 +5,14 @@ import axios from 'axios';
 
 import NewTransactionButtonData from './data';
 
-import { Button, Modal, Box, TextField, List, ListItem, IconButton, ListItemText, Switch, FormControlLabel, FormGroup, FormControl } from '@mui/material';
+import { Button, Modal, Box, TextField, List, ListItem, IconButton, ListItemText, Switch, FormControlLabel, FormGroup, FormControl, MenuItem } from '@mui/material';
 
 import CommentIcon from '@mui/icons-material/Comment';
 
 
 export default function NewTransactionButtonComponent(props) {
 
-  const {transactions, setTransactions} = props;
+  const {transactions, setTransactions, accounts} = props;
 
   const style = {
     position: 'absolute',
@@ -109,10 +109,9 @@ export default function NewTransactionButtonComponent(props) {
         const valor = valorParcela.toFixed(2);
 
         localNewTransactions.push({
+          ...newTransaction,
           date: parcelaDt,
           amount: parseFloat(valor),
-          description: newTransaction.description,
-          category: newTransaction.category,
           parcela: i + 1,
           parcela_total: parseInt(newTransaction.numParcelas)
         })
@@ -145,6 +144,7 @@ export default function NewTransactionButtonComponent(props) {
               label="Data" 
               type="date" 
               name="date" 
+              required
               onChange={handleInputChange} 
               value={newTransaction.date} // Use o valor do estado aqui
               sx={{ mb: 2 }}
@@ -155,12 +155,42 @@ export default function NewTransactionButtonComponent(props) {
             <TextField required label="Valor" type="text" name="amount" onChange={(e) => {setNewTransaction({...newTransaction, amount: parseFloat(e.target.value)})}} sx={{ mb: 2 }} fullWidth />
             <TextField required label="Categoria" type="text" name="category" onChange={handleInputChange} sx={{ mb: 2 }} fullWidth />
 
+            <TextField
+                select
+                fullWidth
+                required
+                label="Conta"
+                name="account_description"
+                onChange={handleInputChange}
+                sx={{ mb: 2 }}
+            >
+                {accounts.map((account) => (
+                    <MenuItem key={account.id} value={account.description}>
+                        {account.description}
+                    </MenuItem>
+                ))}
+            </TextField>
+
+            <TextField
+                select
+                fullWidth
+                required
+                label="Tipo"
+                name="type"
+                onChange={handleInputChange}
+                sx={{ mb: 2 }}
+            >
+                <MenuItem key="IN" value="IN">IN</MenuItem>
+                <MenuItem key="OUT" value="OUT">OUT</MenuItem>
+
+            </TextField>
 
             <FormControl component="fieldset">
               {/* <FormLabel component="legend">Label placement</FormLabel> */}
               <FormGroup aria-label="position" row>
                 <FormControlLabel
                   value="end"
+                  sx={{ mb: 2 }}
                   control={<Switch
                     checked={checked}
                     onChange={handleChangeParcelas}
