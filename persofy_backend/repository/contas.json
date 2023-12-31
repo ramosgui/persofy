@@ -1,0 +1,62 @@
+[
+    {
+        "id": "c32146b2-e5e6-4a11-95bd-a20ecf9074ea",
+        "date": "2023-12-30",
+        "description": "Parcela000",
+        "amount": 183.33,
+        "category": "Testes",
+        "parcela": 1,
+        "parcela_total": 3,
+        "ref": "d4342f21-9210-4346-a279-353ba14d6be0"
+    },
+    {
+        "id": "54f15caa-c358-4f38-8921-5b3de27fcd1e",
+        "date": "2024-01-30",
+        "description": "Parcela000",
+        "amount": 183.33,
+        "category": "Testes",
+        "parcela": 2,
+        "parcela_total": 3,
+        "ref": "d4342f21-9210-4346-a279-353ba14d6be0"
+    },
+    {
+        "id": "299440bd-fbdb-4981-ac54-ec379a948806",
+        "date": "2024-01-30",
+        "description": "Parcela001",
+        "amount": 86.0,
+        "category": "Testes",
+        "parcela": 2,
+        "parcela_total": 5,
+        "ref": "8040dc35-e4f3-48b2-ab68-6fb38df4ddd9"
+    },
+    {
+        "id": "6b5250ef-6095-4726-8e29-ad67d574810f",
+        "date": "2024-02-29",
+        "description": "Parcela001",
+        "amount": 86.0,
+        "category": "Testes",
+        "parcela": 3,
+        "parcela_total": 5,
+        "ref": "8040dc35-e4f3-48b2-ab68-6fb38df4ddd9"
+    },
+    {
+        "id": "3f8e208c-5959-4df4-95fa-2146c6f56701",
+        "date": "2024-03-30",
+        "description": "Parcela001",
+        "amount": 86.0,
+        "category": "Testes",
+        "parcela": 4,
+        "parcela_total": 5,
+        "ref": "8040dc35-e4f3-48b2-ab68-6fb38df4ddd9"
+    },
+    {
+        "id": "bd087f28-eb9e-4948-b6a9-a8558cb523df",
+        "date": "2024-01-03",
+        "description": "SingleTransaction",
+        "amount": 100.0,
+        "category": "Testes",
+        "parcela": null,
+        "parcela_total": null,
+        "ref": null
+    }
+]
