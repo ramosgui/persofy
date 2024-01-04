@@ -50,9 +50,12 @@ def get_transactions_by_month():
     transactions = transactions_repository.get_transactions()
 
     for trx in transactions:
-        key = trx.date[0:7]
-        mapped_months[key][trx.type.lower()] += trx.amount
-        mapped_months[key]['balance'] += trx.amount
+        try:
+            key = trx.date[0:7]
+            mapped_months[key][trx.type.lower()] += trx.amount
+            mapped_months[key]['balance'] += trx.amount
+        except Exception as e:
+            print(e)
 
     formatted_months = [{'dt': x, **y} for x, y in mapped_months.items()]
     return jsonify(formatted_months), 200

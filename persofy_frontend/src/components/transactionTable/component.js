@@ -4,12 +4,15 @@ import TransactionTableData from './data'
 
 import axios from 'axios';
 
-import NewTransactionButtonComponent from '../newTransactionButton/component';
+import NewTransactionButtonComponent from '../newTransactionModal/component';
 
-import { Table, TableBody, TableCell, TableHead, TableRow, Paper, TableContainer } from '@mui/material';
+import TablePagination from '@mui/material/TablePagination';
+
+import { Table, TableBody, TableCell, TableHead, TableRow, Paper, TableContainer, TextField } from '@mui/material';
 
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
+import FileCopyIcon from '@mui/icons-material/FileCopy';
 
 
 const formatarValorParaReal = (valor) => {
@@ -27,12 +30,24 @@ const formatarDescricao = (transaction) => {
 export default function TransactionTableComponent(props) {
 
     const [transactions, setTransactions] = TransactionTableData();
+    const [internalTransactions, setInternalTransactions] = useState([]);
+    const [searchTerm, setSearchTerm] = useState('');
 
-    const {accounts} = props;
+    const [page, setPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(10);
 
-    // useEffect(() => {
+    const { accounts } = props;
 
-    // }, [props])
+    useEffect(() => {
+        axios.get('http://127.0.0.1:5000/transactions')
+            .then(response => {
+                setTransactions(response.data);
+                setInternalTransactions(response.data);
+            })
+            .catch(error => {
+                console.error("Erro ao obter transações", error);
+            });
+    }, []);
 
     const handleDelete = (transacaoId) => {
         // Enviar solicitação de delete para o servidor
@@ -47,53 +62,102 @@ export default function TransactionTableComponent(props) {
             });
     };
 
+    const handleDuplicate = (transacao) => {
+        props.setDupTrxModal(true);
+        props.setSelectedTransaction(transacao);
+    };
+
+    const handleSearch = (value) => {
+        console.log(value)
+        setSearchTerm(value);
+
+        if (!value) {
+            setInternalTransactions(transactions)
+            return
+        }
+
+        const filteredTransactions = transactions.filter(transacao =>
+            transacao.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            transacao.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            transacao.date.includes(searchTerm)
+        )
+
+        setInternalTransactions(filteredTransactions)
+
+    }
+
     return (
         <>
-        <NewTransactionButtonComponent transactions={transactions} setTransactions={setTransactions} accounts={accounts}/>
-        <div id="transactionTable">
-            <TableContainer component={Paper}>
-                <Table size="small" aria-label="a dense table">
-                    <TableHead>
-                        <TableRow>
-                            <TableCell>#</TableCell>
-                            <TableCell>Id</TableCell>
-                            <TableCell>Ref</TableCell>
-                            <TableCell>Tipo</TableCell>
-                            <TableCell>Data</TableCell>
-                            <TableCell>Descrição</TableCell>
-                            <TableCell>Valor</TableCell>
-                            <TableCell>Categoria</TableCell>
-                            <TableCell>Conta</TableCell>
-                            <TableCell></TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {transactions.map((transacao, index) => (
-                            <TableRow
-                                key={index}
-                                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                            >
-                                <TableCell>{index+1}</TableCell>
-                                <TableCell>{transacao.id}</TableCell>
-                                <TableCell>{transacao.ref}</TableCell>
-                                <TableCell>{transacao.type}</TableCell>
-                                <TableCell>{transacao.date}</TableCell>
-                                <TableCell>{formatarDescricao(transacao)}</TableCell>
-                                <TableCell>{formatarValorParaReal(transacao.amount)}</TableCell>
-                                <TableCell>{transacao.category}</TableCell>
-                                <TableCell>{transacao.account_description}</TableCell>
-                                <TableCell>
-                                    <IconButton onClick={() => handleDelete(transacao.id)}>
-                                        <DeleteIcon />
-                                    </IconButton>
-                                </TableCell>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px' }}>
+                <NewTransactionButtonComponent transactions={internalTransactions} setTransactions={setTransactions} accounts={accounts} />
+                <TextField
+                    label="Buscar"
+                    type="text"
+                    value={searchTerm}
+                    onChange={(e) => handleSearch(e.target.value)}
+                    sx={{ mb: 2 }}
+                />
+            </div>
+            <div id="transactionTable">
+                <TableContainer component={Paper}>
+                    <Table size="small" aria-label="a dense table">
+                        <TableHead>
+                            <TableRow>
+                                <TableCell>#</TableCell>
+                                <TableCell>Id</TableCell>
+                                <TableCell>Ref</TableCell>
+                                <TableCell>Tipo</TableCell>
+                                <TableCell>Data</TableCell>
+                                <TableCell>Descrição</TableCell>
+                                <TableCell>Valor</TableCell>
+                                <TableCell>Categoria</TableCell>
+                                <TableCell>Conta</TableCell>
+                                <TableCell></TableCell>
                             </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-            </TableContainer>
-        </div>
-        
+                        </TableHead>
+                        <TableBody>
+                            {internalTransactions
+                                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                                .map((transacao, index) => (
+                                    <TableRow
+                                        key={index}
+                                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                    >
+                                        <TableCell>{index + 1}</TableCell>
+                                        <TableCell>{transacao.id}</TableCell>
+                                        <TableCell>{transacao.ref}</TableCell>
+                                        <TableCell>{transacao.type}</TableCell>
+                                        <TableCell>{transacao.date}</TableCell>
+                                        <TableCell>{formatarDescricao(transacao)}</TableCell>
+                                        <TableCell>{formatarValorParaReal(transacao.amount)}</TableCell>
+                                        <TableCell>{transacao.category}</TableCell>
+                                        <TableCell>{transacao.account_description}</TableCell>
+                                        <TableCell>
+                                            <IconButton onClick={() => handleDuplicate(transacao)}>
+                                                <FileCopyIcon />
+                                            </IconButton>
+                                            <IconButton onClick={() => handleDelete(transacao.id)}>
+                                                <DeleteIcon />
+                                            </IconButton>
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                        </TableBody>
+                    </Table>
+                    <TablePagination
+                        component="div"
+                        count={internalTransactions.length}
+                        page={page}
+                        onPageChange={(event, newPage) => setPage(newPage)}
+                        rowsPerPage={rowsPerPage}
+                        onRowsPerPageChange={(event) => {
+                            setRowsPerPage(parseInt(event.target.value, 10));
+                            setPage(0);
+                        }}
+                    />
+                </TableContainer>
+            </div>
+
         </>
     )
 }

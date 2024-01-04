@@ -6,20 +6,11 @@ import axios from 'axios';
 
 function TransactionTableData() {
     const [transactions, setTransactions] = useState([]);
+    const [selectedTransaction, setSelectedTransaction] = useState({});
 
-    useEffect(() => {
-        axios.get('http://127.0.0.1:5000/transactions')
-            .then(response => {
-                setTransactions(response.data);
-                console.log(response.data);
-                // setCopyList(response.data);
-            })
-            .catch(error => {
-                console.error("Erro ao obter transações", error);
-            });
-    }, []);
+    
 
-    return [transactions, setTransactions];
+    return [transactions, setTransactions, selectedTransaction, setSelectedTransaction];
 }
 
 export default TransactionTableData;

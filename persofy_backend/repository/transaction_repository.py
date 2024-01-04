@@ -16,6 +16,8 @@ class TransactionRepository:
                                       account_description: str, parcela: int = None, parcela_total: int = None,
                                       ref: str = None):
         _id = str(uuid.uuid4())
+        amount = float(amount)
+
         if amount > 0 and _type == 'OUT':
             amount = amount*-1
 

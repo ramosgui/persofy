@@ -1,1 +1,28 @@
-[]
+[
+    {
+        "id": "0846ff9d-d75a-4ae7-b854-4f716fcc2dba",
+        "description": "Iti",
+        "saldo_inicial": 1000
+    },
+    {
+        "id": "89b49209-a589-4e86-900b-3bbca48abf65",
+        "description": "Nubank",
+        "saldo_inicial": 500
+    },
+    {
+        "id": "50bc8d50-f73b-4099-8bde-77887c510176",
+        "description": "Itau",
+        "saldo_inicial": 0,
+        "total_do_valor_de_saida": 0,
+        "total_do_valor_de_entrada": 0,
+        "total_balanco": 0
+    },
+    {
+        "id": "f8e9d30e-f10d-43a6-b359-a9ff3e7728b5",
+        "description": "Rico",
+        "saldo_inicial": 0,
+        "total_do_valor_de_saida": 0,
+        "total_do_valor_de_entrada": 0,
+        "total_balanco": 0
+    }
+]

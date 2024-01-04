@@ -4,7 +4,7 @@ import TransactionByMonthTableData from './data'
 
 import axios from 'axios';
 
-import NewTransactionButtonComponent from '../newTransactionButton/component';
+import NewTransactionButtonComponent from '../newTransactionModal/component';
 
 import { Table, TableBody, TableCell, TableHead, TableRow, Paper, TableContainer } from '@mui/material';
 

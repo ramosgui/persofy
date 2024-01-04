@@ -1,5 +1,6 @@
 import { useState, useEffect, React } from 'react'
 import { format, addMonths, addDays } from 'date-fns';
+import Checkbox from '@mui/material/Checkbox';
 
 import axios from 'axios';
 
@@ -30,12 +31,14 @@ export default function NewTransactionButtonComponent(props) {
 
   const [parcelas, setParcelas] = useState([]);
   const [checked, setChecked] = useState(false);
+  const [switchStatus, setSwitchStatus] = useState(false);
 
   const dataHoje = format(new Date(), 'yyyy-MM-dd');
 
   const [newTransactions, setNewTransactions] = useState([]);
   const [newTransaction, setNewTransaction] = useState({
-    date: dataHoje
+    date: dataHoje,
+    recorrenteFlag: false
   });
 
   const handleInputChange = (e) => {
@@ -82,11 +85,11 @@ export default function NewTransactionButtonComponent(props) {
 
     if (checked) {
       console.log(newTransactions);
-      adicionarTransacoes();
+      // adicionarTransacoes();
 
     } else {
       console.log(newTransaction);
-      adicionarTransacao();
+      // adicionarTransacao();
     }
 
   };
@@ -127,6 +130,17 @@ export default function NewTransactionButtonComponent(props) {
     }
 
     setNewTransactions(localNewTransactions);
+  };
+
+  const handleChangeRecorrenteFlag = (e) => {
+    setNewTransaction({...newTransaction, recorrenteFlag: e.target.checked})
+    if (e.target.checked) {
+      setSwitchStatus(true)
+      setChecked(false)
+    } else {
+      setSwitchStatus(false)
+    }
+    
   };
 
 
@@ -185,12 +199,21 @@ export default function NewTransactionButtonComponent(props) {
 
             </TextField>
 
+            <FormGroup>
+              <FormControlLabel control={<Checkbox onChange={handleChangeRecorrenteFlag} checked={newTransaction.recorrenteFlag} />} label="Transação recorrente?" name="recorrente_flag"/>
+            </FormGroup>
+
             <FormControl component="fieldset">
               {/* <FormLabel component="legend">Label placement</FormLabel> */}
               <FormGroup aria-label="position" row>
                 <FormControlLabel
                   value="end"
                   sx={{ mb: 2 }}
+
+                  // switchStatus
+
+                  disabled={switchStatus}
+
                   control={<Switch
                     checked={checked}
                     onChange={handleChangeParcelas}
