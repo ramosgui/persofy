@@ -1,8 +1,10 @@
+import uuid
+
 
 class TransactionModel:
 
-    def __init__(self, _id: str, date, description, amount, category, account_description: str, _type: str,
-                 parcela: int = None, parcela_total: int = None, ref: str = None):
+    def __init__(self, date, description, amount, category, account_description: str, _type: str, _id: str = None,
+                 parcela: int = None, parcela_total: int = None, ref: str = None, financiamento_id: str = None):
         self._id = _id
         self._date = date
         self._description = description
@@ -13,6 +15,7 @@ class TransactionModel:
         self._ref = ref
         self._account_description = account_description
         self._type = _type
+        self._financiamento_id = financiamento_id
 
     @property
     def account_description(self) -> str:
@@ -20,6 +23,8 @@ class TransactionModel:
 
     @property
     def id(self):
+        if not self._id:
+            return str(uuid.uuid4())
         return self._id
 
     @property
@@ -38,10 +43,10 @@ class TransactionModel:
 
     @property
     def amount(self) -> float:
-        try:
-            return float(self._amount)
-        except ValueError:
-            raise ValueError("Valor deve ser um número.")
+        amount = float(self._amount)
+        if amount > 0 and self._type == 'OUT':
+            amount = amount * -1
+        return amount
 
     @property
     def category(self) -> str:
@@ -59,6 +64,10 @@ class TransactionModel:
     def ref(self) -> str:
         return self._ref
 
+    @property
+    def financiamento_id(self) -> str:
+        return self._financiamento_id
+
     def as_dict(self) -> dict:
         return {
             'id': self.id,
@@ -70,5 +79,6 @@ class TransactionModel:
             'parcela_total': self.parcela_total,
             'ref': self.ref,
             'account_description': self.account_description,
-            'type': self.type
+            'type': self.type,
+            'financiamento_id': self.financiamento_id
         }

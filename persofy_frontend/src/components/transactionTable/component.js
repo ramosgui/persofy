@@ -1,4 +1,5 @@
 import { useState, useEffect, React } from 'react'
+import { format, addMonths, addDays, subDays } from 'date-fns';
 
 import TransactionTableData from './data'
 
@@ -31,10 +32,13 @@ export default function TransactionTableComponent(props) {
 
     const [transactions, setTransactions] = TransactionTableData();
     const [internalTransactions, setInternalTransactions] = useState([]);
-    const [searchTerm, setSearchTerm] = useState('');
+    const [searchTerm, setSearchTerm] = useState(null);
 
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
+
+    const [startDate, setStartDate] = useState(subDays(new Date(new Date().getFullYear(), new Date().getMonth(), 1), 1));
+    const [endDate, setEndDate] = useState(subDays(new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0), 1));
 
     const { accounts } = props;
 
@@ -48,6 +52,10 @@ export default function TransactionTableComponent(props) {
                 console.error("Erro ao obter transações", error);
             });
     }, []);
+
+    useEffect(() => {
+        handleSearchAndFilter();
+    }, [searchTerm, startDate, endDate, transactions]);
 
     const handleDelete = (transacaoId) => {
         // Enviar solicitação de delete para o servidor
@@ -67,34 +75,56 @@ export default function TransactionTableComponent(props) {
         props.setSelectedTransaction(transacao);
     };
 
-    const handleSearch = (value) => {
-        console.log(value)
-        setSearchTerm(value);
+    const handleSearchAndFilter = () => {
+        let filteredTransactions = transactions;
 
-        if (!value) {
-            setInternalTransactions(transactions)
-            return
+        // console.log(searchTerm)
+    
+        if (searchTerm) {
+            filteredTransactions = filteredTransactions.filter(transacao =>
+                transacao.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                transacao.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                transacao.date.includes(searchTerm)
+            );
+        
+            setStartDate(null);
+            setEndDate(null);
         }
-
-        const filteredTransactions = transactions.filter(transacao =>
-            transacao.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            transacao.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            transacao.date.includes(searchTerm)
-        )
-
-        setInternalTransactions(filteredTransactions)
-
-    }
+    
+        if (startDate || endDate) {
+            filteredTransactions = filteredTransactions.filter(transacao => {
+                const transacaoDate = new Date(transacao.date);
+                return (!startDate || transacaoDate >= startDate) && (!endDate || transacaoDate <= endDate);
+            });
+        }
+    
+        setInternalTransactions(filteredTransactions);
+    };
 
     return (
         <>
+
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px' }}>
                 <NewTransactionButtonComponent transactions={internalTransactions} setTransactions={setTransactions} accounts={accounts} />
+                <TextField
+                    label="Data Inicial"
+                    type="date"
+                    value={startDate ? format(addDays(startDate, 1), 'yyyy-MM-dd') : ''}
+                    onChange={(e) => setStartDate(e.target.value ? new Date(e.target.value) : null)}
+                    sx={{ mr: 2, mb: 2 }}
+                />
+                <TextField
+                    label="Data Final"
+                    type="date"
+                    value={endDate ? format(addDays(endDate, 1), 'yyyy-MM-dd') : ''}
+                    onChange={(e) => setEndDate(e.target.value ? new Date(e.target.value) : null)}
+                    sx={{ mb: 2 }}
+                />
                 <TextField
                     label="Buscar"
                     type="text"
                     value={searchTerm}
-                    onChange={(e) => handleSearch(e.target.value)}
+                    onChange={(e) => setSearchTerm(e.target.value)}
                     sx={{ mb: 2 }}
                 />
             </div>

@@ -7,10 +7,12 @@ from flask_cors import CORS
 import infrastructure as infra
 from model.account_model import AccountModel
 from model.transaction_model import TransactionModel
+from repository.financiamento_repository import FinanciamentoRepository
 from repository.transaction_repository import TransactionRepository
 
 from repository.account_repository import AccountRepository
 from route.account_blueprint import accounts_blueprint
+from route.financiamento_blueprint import financiamento_blueprint
 from route.transaction_blueprint import transactions_blueprint
 
 # app = Flask(__name__)
@@ -53,10 +55,12 @@ class AppConfig:
         CORS(app)
         app.register_blueprint(transactions_blueprint)
         app.register_blueprint(accounts_blueprint)
+        app.register_blueprint(financiamento_blueprint)
 
         trx_repo = TransactionRepository('repository/jsons/transacoes.json')
         app.transaction_repository = trx_repo
         app.account_repository = AccountRepository('repository/jsons/contas.json', trx_repo)
+        app.financiamento_repository = FinanciamentoRepository('repository/jsons/financiamentos.json', trx_repo)
 
         return app
 

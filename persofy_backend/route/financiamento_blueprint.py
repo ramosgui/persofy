@@ -3,7 +3,7 @@ import uuid
 
 from model.account_model import AccountModel
 
-accounts_blueprint = Blueprint('accounts', __name__)
+financiamento_blueprint = Blueprint('financiamento', __name__)
 
 
 def create_account_model(description: str, saldo_inicial: float):
@@ -13,8 +13,8 @@ def create_account_model(description: str, saldo_inicial: float):
     return new_account
 
 
-@accounts_blueprint.route('/account', methods=["POST"])
-def create_account():
+@financiamento_blueprint.route('/account', methods=["POST"])
+def create_financiamentos():
     description = request.json['description']
     saldo_inicial = request.json['saldo_inicial']
 
@@ -24,8 +24,8 @@ def create_account():
     return jsonify({'msg': 'Conta criada com sucesso', 'item': new_account.as_dict()}), 200
 
 
-@accounts_blueprint.route('/accounts', methods=["GET"])
-def get_accounts():
-    accounts = current_app.account_repository.get_accounts()
+@financiamento_blueprint.route('/financiamentos', methods=["GET"])
+def get_financiamentos():
+    accounts = current_app.financiamento_repository.get_financiamentos()
     formatted_accounts = [acc.as_dict() for acc in accounts] if accounts else []
     return jsonify(formatted_accounts), 200
